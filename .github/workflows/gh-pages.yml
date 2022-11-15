@@ -2,6 +2,7 @@ name: github pages
 on: [pull-request, push]
 jobs:
   deploy:
+    name: Documentation
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout
