@@ -2,14 +2,19 @@ name: github pages
 on: push
 jobs:
   deploy:
+    name: Creating Documentation
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout
-        steps:
-        - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b  # actions/checkout v3.0.2
-        - uses: actions/setup-python@v4
-          with: '3.9'
-        - run: python website/generate.py
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b  # actions/checkout v3.0.2
+
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+          architecture: x64
+
+      - run: python website/generate.py
 
       - name: Setup hugo
         uses: peaceiris/actions-hugo@v2
