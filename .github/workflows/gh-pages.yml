@@ -1,27 +1,11 @@
 name: github pages
-on: [pull-request, push]
+on: push
 jobs:
   deploy:
-    name: Documentation
     runs-on: ubuntu-latest
     steps:
-
-      - name: Generate the new documentation
-        uses: actions/checkout@v3
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-          - name: Install dependencies
-            run: | 
-              pip install -r requirements.txt
-              pip install 
-          - name: Run the script
-            run: python website/generate.py
-
-      - name: Commit Documentation
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Automated Change
+      - name: Git checkout
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b  # actions/checkout v3.0.2
 
       - name: Setup hugo
         uses: peaceiris/actions-hugo@v2
@@ -30,13 +14,14 @@ jobs:
           extended: true
 
       - name: Build
+        # remove --minify tag if you do not need it
+        # docs: https://gohugo.io/hugo-pipes/minification/
         working-directory: ./website
         env:
           BEACON_TOKEN: ${{ secrets.HUGO_ANALYTICS }}
         run: |
           sed -i -e "s/{%BEACON%}/$BEACON_TOKEN/g" themes/hugo-geekdoc/layouts/partials/foot.html
           hugo
-
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: github.ref == 'refs/heads/main'
